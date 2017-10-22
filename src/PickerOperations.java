@@ -1,13 +1,19 @@
+import java.util.ArrayList;
+
 public interface PickerOperations {
 
-  void addPick(Hero hero, TeamEnum team);
+  void addPick(HeroEnum heroEnum, TeamEnum team);
 
-  void removePick(Hero hero, TeamEnum team);
+  void removePick(HeroEnum heroEnum, TeamEnum team);
 
-  void addBan(Hero hero, TeamEnum team);
+  void addBan(HeroEnum heroEnum, TeamEnum team);
 
-  void removeBan(Hero hero, TeamEnum team);
+  void removeBan(HeroEnum heroEnum, TeamEnum team);
 
   int heroCount(TeamEnum team);
+
+  void updateAggregatedMatchups(TeamEnum team);
+
+  ArrayList<Couplet> getAggregatedMatchups(TeamEnum team);
 
 }

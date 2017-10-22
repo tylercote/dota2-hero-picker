@@ -1,122 +1,61 @@
-public enum Hero {
-  ABADDON,
-  ALCHEMIST,
-  ANCIENT_APPARITION,
-  ANTIMAGE,
-  ARC_WARDEN,
-  AXE,
-  BANE,
-  BATRIDER,
-  BEASTMASTER,
-  BLOODSEEKER,
-  BOUNTY_HUNTER,
-  BREWMASTER,
-  BRISTLEBACK,
-  BROODMOTHER,
-  CENTAUR_WARRUNNER,
-  CHAOS_KNIGHT,
-  CHEN,
-  CLINKZ,
-  CLOCKWERK,
-  CRYSTAL_MAIDEN,
-  DARK_SEER,
-  DAZZLE,
-  DEATH_PROPHET,
-  DISRUPTOR,
-  DOOM,
-  DRAGON_KNIGHT,
-  DROW_RANGER,
-  EARTH_SPIRIT,
-  EARTHSHAKER,
-  ELDER_TITAN,
-  EMBER_SPIRIT,
-  ENCHANTRESS,
-  ENIGMA,
-  FACELESS_VOID,
-  GYROCOPTER,
-  HUSKAR,
-  INVOKER,
-  IO,
-  JAKIRO,
-  JUGGERNAUT,
-  KEEPER_OF_THE_LIGHT,
-  KUNKKA,
-  LEGION_COMMANDER,
-  LESHRAC,
-  LICH,
-  LIFESTEALER,
-  LINA,
-  LION,
-  LONE_DRUID,
-  LUNA,
-  LYCAN,
-  MAGNUS,
-  MEDUSA,
-  MEEPO,
-  MIRANA,
-  MONKEY_KING,
-  MORPHLING,
-  NAGA_SIREN,
-  NATURES_PROPHET,
-  NECROPHOS,
-  NIGHT_STALKER,
-  NYX_ASSASSIN,
-  OGRE_MAGI,
-  OMNIKNIGHT,
-  ORACLE,
-  OUTWORLD_DEVOURER,
-  PHANTOM_ASSASSIN,
-  PHANTOM_LANCER,
-  PHOENIX,
-  PUCK,
-  PUDGE,
-  PUGNA,
-  QUEEN_OF_PAIN,
-  RAZOR,
-  RIKI,
-  RUBICK,
-  SAND_KING,
-  SHADOW_DEMON,
-  SHADOW_FIEND,
-  SHADOW_SHAMAN,
-  SILENCER,
-  SKYWRATH_MAGE,
-  SLARDAR,
-  SLARK,
-  SNIPER,
-  SPECTRE,
-  SPIRIT_BREAKER,
-  STORM_SPIRIT,
-  SVEN,
-  TECHIES,
-  TEMPLAR_ASSASSIN,
-  TERRORBLADE,
-  TIDEHUNTER,
-  TIMBERSAW,
-  TINKER,
-  TINY,
-  TREANT_PROTECTOR,
-  TROLL_WARLORD,
-  TUSK,
-  UNDERLORD,
-  UNDYING,
-  URSA,
-  VENGEFUL_SPIRIT,
-  VENOMANCER,
-  VIPER,
-  VISAGE,
-  WARLOCK,
-  WEAVER,
-  WINDRANGER,
-  WINTER_WYVERN,
-  WITCH_DOCTOR,
-  WRAITH_KING,
-  ZEUS;
 
-  final String getUrl(Hero hero) {
-    String name = hero.name().toLowerCase();
-    name.replaceAll("_", "-");
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import javax.swing.*;
+
+public class Hero {
+
+  HeroEnum hero;
+  String heroName;
+  ArrayList<Couplet> matchups;
+  Image heroImage;
+
+  Hero(HeroEnum hero) {
+    this.hero = hero;
+    this.heroName = String.valueOf(hero).replaceAll("_", " ");
+    this.matchups = getMatchups(hero);
+    //ImageIcon icon = new ImageIcon(String.valueOf(hero).toLowerCase()
+    //        .replaceAll("_", "-") + ".jpg");
+    ImageIcon icon = new ImageIcon("ancient-apparition.jpg");
+    this.heroImage = icon.getImage();
+  }
+
+  private static final String getUrl(HeroEnum heroEnum) {
+    String name = heroEnum.name().toLowerCase();
+    name = name.replaceAll("_", "-");
     return "https://www.dotabuff.com/heroes/" + name + "/matchups";
+  }
+
+  static final ArrayList<Couplet> getMatchups(HeroEnum heroEnum) {
+
+    ArrayList<Couplet> matchups = new ArrayList<>();
+    Document dbpage;
+
+    try {
+      dbpage = Jsoup.connect(getUrl(heroEnum)).get();
+    }
+    catch (IOException e) {
+      throw new IllegalAccessError("Couldn't access dotabuff page");
+    }
+
+    Elements tables = dbpage.getElementsByTag("tbody");
+    Element winrateTable = tables.get(1);
+    Elements matchupRows = winrateTable.select("tr");
+
+    for (Element row : matchupRows) {
+      HeroEnum hero = HeroEnum.valueOf(row.select("td").first().attr("data-value").toUpperCase().replaceAll(" ", "_").replaceAll("\'", "").replaceAll("-", ""));
+      Double winrate = Double.valueOf(row.select("td").get(2).attr("data-value"));
+      matchups.add(new Couplet(hero, winrate));
+    }
+
+    return matchups;
   }
 
 }

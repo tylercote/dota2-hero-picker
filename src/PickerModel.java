@@ -1,50 +1,56 @@
+import java.util.ArrayList;
+
 public class PickerModel implements PickerOperations {
 
   Team dire;
   Team radiant;
+  ArrayList<Couplet> direAggregatedMatchups;
+  ArrayList<Couplet> radiantAggregatedMatchups;
 
-  PickerModel() {
+  public PickerModel() {
     this.dire = new Team(TeamEnum.DIRE);
     this.radiant = new Team(TeamEnum.RADIANT);
+    this.direAggregatedMatchups = new ArrayList<>();
+    this.radiantAggregatedMatchups = new ArrayList<>();
   }
 
   @Override
-  public void addPick(Hero hero, TeamEnum team) {
+  public void addPick(HeroEnum heroEnum, TeamEnum team) {
     if (team.equals(TeamEnum.DIRE)){
-      dire.addPick(hero);
+      dire.addPick(heroEnum);
     }
     else {
-      radiant.addPick(hero);
+      radiant.addPick(heroEnum);
     }
   }
 
   @Override
-  public void removePick(Hero hero, TeamEnum team) {
+  public void removePick(HeroEnum heroEnum, TeamEnum team) {
     if (team.equals(TeamEnum.DIRE)) {
-      dire.removePick(hero);
+      dire.removePick(heroEnum);
     }
     else {
-      radiant.removePick(hero);
+      radiant.removePick(heroEnum);
     }
   }
 
   @Override
-  public void addBan(Hero hero, TeamEnum team) {
+  public void addBan(HeroEnum heroEnum, TeamEnum team) {
     if (team.equals(TeamEnum.DIRE)) {
-      dire.addBan(hero);
+      dire.addBan(heroEnum);
     }
     else {
-      radiant.addBan(hero);
+      radiant.addBan(heroEnum);
     }
   }
 
   @Override
-  public void removeBan(Hero hero, TeamEnum team) {
+  public void removeBan(HeroEnum heroEnum, TeamEnum team) {
     if (team.equals(TeamEnum.DIRE)) {
-      dire.removeBan(hero);
+      dire.removeBan(heroEnum);
     }
     else {
-      radiant.removeBan(hero);
+      radiant.removeBan(heroEnum);
     }
   }
 
@@ -55,6 +61,26 @@ public class PickerModel implements PickerOperations {
     }
     else {
       return radiant.picks.size();
+    }
+  }
+
+  @Override
+  public void updateAggregatedMatchups(TeamEnum team) {
+    if (team.equals(TeamEnum.DIRE)) {
+      this.direAggregatedMatchups = dire.getAggregatedMatchups();
+    }
+    else {
+      this.radiantAggregatedMatchups = radiant.getAggregatedMatchups();
+    }
+  }
+
+  @Override
+  public ArrayList<Couplet> getAggregatedMatchups(TeamEnum team) {
+    if (team.equals(TeamEnum.DIRE)) {
+      return direAggregatedMatchups;
+    }
+    else {
+      return radiantAggregatedMatchups;
     }
   }
 }

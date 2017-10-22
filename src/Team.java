@@ -1,11 +1,15 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
 
 class Team {
 
   TeamEnum side;
-  List<Hero> picks;
-  List<Hero> bans;
+  ArrayList<HeroEnum> picks;
+  ArrayList<HeroEnum> bans;
+
 
   Team(TeamEnum side) {
     this.side = side;
@@ -13,11 +17,11 @@ class Team {
     this.bans = new ArrayList<>();
   }
 
-  public List<Hero> getPicks() {
+  public List<HeroEnum> getPicks() {
     return picks;
   }
 
-  public List<Hero> getBans() {
+  public List<HeroEnum> getBans() {
     return bans;
   }
 
@@ -29,28 +33,57 @@ class Team {
     return bans.size();
   }
 
-  void addPick(Hero hero) {
-    if (picks.size() < 5 && !picks.contains(hero)) {
-      picks.add(hero);
+  void addPick(HeroEnum heroEnum) {
+    if (picks.size() < 5 && !picks.contains(heroEnum)) {
+      picks.add(heroEnum);
     }
   }
 
-  void addBan(Hero hero) {
-    if (!bans.contains(hero)) {
-      bans.add(hero);
+  void addBan(HeroEnum heroEnum) {
+    if (!bans.contains(heroEnum)) {
+      bans.add(heroEnum);
     }
   }
 
-  void removePick(Hero hero) {
-    if (picks.contains(hero)) {
-      picks.remove(hero);
+  void removePick(HeroEnum heroEnum) {
+    if (picks.contains(heroEnum)) {
+      picks.remove(heroEnum);
     }
   }
 
-  void removeBan(Hero hero) {
-    if (bans.contains(hero)) {
-      bans.remove(hero);
+  void removeBan(HeroEnum heroEnum) {
+    if (bans.contains(heroEnum)) {
+      bans.remove(heroEnum);
     }
+  }
+
+  ArrayList<Couplet> getAggregatedMatchups() {
+    ArrayList<Couplet> aggregatedMatchups = new ArrayList<>();
+    // Initializes couplets to 0, in alphabetical order
+    for (int i = 0; i < HeroEnum.values().length; i++) {
+      aggregatedMatchups.add(new Couplet(HeroEnum.values()[i], 0.0));
+    }
+    for (HeroEnum heroEnum : picks) {
+      Hero hero = new Hero(heroEnum);
+      ArrayList<Couplet> matchups = hero.matchups;
+      //Sorts matchups alphabetically
+      Collections.sort(matchups, new Comparator<Couplet>() {
+        @Override
+        public int compare(Couplet o1, Couplet o2) {
+          return String.valueOf(o1.hero).compareTo(String.valueOf(o2.hero));
+        }
+      });
+
+      for (Couplet c : matchups) {
+        for (Couplet ca : aggregatedMatchups) {
+          if (c.hero == ca.hero) {
+            ca.setWinrate(ca.getWinrate() + c.getWinrate());
+            break;
+          }
+        }
+      }
+    }
+    return aggregatedMatchups;
   }
 
 
