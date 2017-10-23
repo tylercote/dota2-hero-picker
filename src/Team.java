@@ -1,60 +1,82 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
-
 
 class Team {
 
   TeamEnum side;
-  ArrayList<HeroEnum> picks;
-  ArrayList<HeroEnum> bans;
+  HeroEnum[] picks;
+  HeroEnum[] bans;
 
 
   Team(TeamEnum side) {
     this.side = side;
-    this.picks = new ArrayList<>();
-    this.bans = new ArrayList<>();
+    this.picks = new HeroEnum[5];
+    this.bans = new HeroEnum[5];
   }
 
-  public List<HeroEnum> getPicks() {
+  public HeroEnum[] getPicks() {
     return picks;
   }
 
-  public List<HeroEnum> getBans() {
+  public HeroEnum[] getBans() {
     return bans;
   }
 
   int numPicks() {
-    return picks.size();
+    int sum = 0;
+    for (int i = 0; i < picks.length; i++) {
+      if (picks[i] != null) {
+        sum++;
+      }
+    }
+    return sum;
   }
 
   int numBans() {
-    return bans.size();
+    int sum = 0;
+    for (int i = 0; i < bans.length; i++) {
+      if (bans[i] != null) {
+        sum++;
+      }
+    }
+    return sum;
   }
 
-  void addPick(HeroEnum heroEnum) {
-    if (picks.size() < 5 && !picks.contains(heroEnum)) {
-      picks.add(heroEnum);
+  boolean picksContains(HeroEnum heroEnum) {
+    for (int i = 0; i < 5; i++) {
+      if (picks[i] != null) {
+        if (heroEnum.equals(picks[i])) {
+          return true;
+        }
+      }
     }
+    return false;
   }
 
-  void addBan(HeroEnum heroEnum) {
-    if (!bans.contains(heroEnum)) {
-      bans.add(heroEnum);
+  boolean bansContains(HeroEnum heroEnum) {
+    for (int i = 0; i < 5; i++) {
+      if (bans[i] != null) {
+        if (heroEnum.equals(bans[i])) {
+          return true;
+        }
+      }
     }
+    return false;
   }
 
-  void removePick(HeroEnum heroEnum) {
-    if (picks.contains(heroEnum)) {
-      picks.remove(heroEnum);
+  void addPick(HeroEnum heroEnum, int place) {
+    if (picksContains(heroEnum)) {
+      throw new IllegalArgumentException("Hero already picked.");
     }
+    picks[place] = heroEnum;
   }
 
-  void removeBan(HeroEnum heroEnum) {
-    if (bans.contains(heroEnum)) {
-      bans.remove(heroEnum);
+  void addBan(HeroEnum heroEnum, int place) {
+    if (bansContains(heroEnum)) {
+      throw new IllegalArgumentException("Hero already banned.");
     }
+    bans[place] = heroEnum;
   }
 
   ArrayList<Couplet> getAggregatedMatchups() {
@@ -63,28 +85,30 @@ class Team {
     for (int i = 0; i < HeroEnum.values().length; i++) {
       aggregatedMatchups.add(new Couplet(HeroEnum.values()[i], 0.0));
     }
-    for (HeroEnum heroEnum : picks) {
-      Hero hero = new Hero(heroEnum);
-      ArrayList<Couplet> matchups = hero.matchups;
-      //Sorts matchups alphabetically
-      Collections.sort(matchups, new Comparator<Couplet>() {
-        @Override
-        public int compare(Couplet o1, Couplet o2) {
-          return String.valueOf(o1.hero).compareTo(String.valueOf(o2.hero));
-        }
-      });
+    for (int i = 0; i < 5; i++) {
+      if (picks[i] != null) {
+        Hero hero = new Hero(picks[i]);
+        ArrayList<Couplet> matchups = hero.matchups;
+        //Sorts matchups alphabetically
+        Collections.sort(matchups, new Comparator<Couplet>() {
+          @Override
+          public int compare(Couplet o1, Couplet o2) {
+            return String.valueOf(o1.hero).compareTo(String.valueOf(o2.hero));
+          }
+        });
 
-      for (Couplet c : matchups) {
-        for (Couplet ca : aggregatedMatchups) {
-          if (c.hero == ca.hero) {
-            ca.setWinrate(ca.getWinrate() + c.getWinrate());
-            break;
+        for (Couplet c : matchups) {
+          for (Couplet ca : aggregatedMatchups) {
+            if (c.hero == ca.hero) {
+              ca.setWinrate(ca.getWinrate() + c.getWinrate());
+              break;
+            }
           }
         }
       }
+
     }
     return aggregatedMatchups;
   }
-
 
 }
