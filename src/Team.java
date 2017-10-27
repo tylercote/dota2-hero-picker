@@ -66,16 +66,20 @@ class Team {
   }
 
   void addPick(HeroEnum heroEnum, int place) {
+    /**
     if (picksContains(heroEnum)) {
       throw new IllegalArgumentException("Hero already picked.");
     }
+     */
     picks[place] = heroEnum;
   }
 
   void addBan(HeroEnum heroEnum, int place) {
+    /**
     if (bansContains(heroEnum)) {
       throw new IllegalArgumentException("Hero already banned.");
     }
+     */
     bans[place] = heroEnum;
   }
 
@@ -106,7 +110,6 @@ class Team {
           }
         }
       }
-
     }
     return aggregatedMatchups;
   }

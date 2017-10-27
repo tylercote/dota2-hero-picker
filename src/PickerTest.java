@@ -7,7 +7,6 @@ public class PickerTest {
     PickerModel model = new PickerModel();
     PickerView view = new PickerView(model);
     PickerController control = new PickerController(model);
-    view.setGuiControl(control);
 
     JFrame frame = new JFrame("Dota 2 Picker");
     frame.getContentPane().add(view.getMainPanel()); // add view

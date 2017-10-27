@@ -20,10 +20,8 @@ public class Hero {
   Hero(HeroEnum hero) {
     this.hero = hero;
     this.heroName = String.valueOf(hero).replaceAll("_", " ");
-    this.matchups = getMatchups(hero);
-    //ImageIcon icon = new ImageIcon(String.valueOf(hero).toLowerCase()
-    //        .replaceAll("_", "-") + ".jpg");
-    ImageIcon icon = new ImageIcon("ancient-apparition.jpg");
+    this.matchups = updateMatchups(hero);
+    ImageIcon icon = new ImageIcon(String.valueOf(hero).toLowerCase().replaceAll("_", "-") + ".jpg");
     this.heroImage = icon.getImage();
   }
 
@@ -33,8 +31,11 @@ public class Hero {
     return "https://www.dotabuff.com/heroes/" + name + "/matchups";
   }
 
-  static final ArrayList<Couplet> getMatchups(HeroEnum heroEnum) {
+  public ArrayList<Couplet> getMatchups() {
+    return this.matchups;
+  }
 
+  static final ArrayList<Couplet> updateMatchups(HeroEnum heroEnum) {
     ArrayList<Couplet> matchups = new ArrayList<>();
     Document dbpage;
 

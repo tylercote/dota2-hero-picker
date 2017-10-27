@@ -1,7 +1,6 @@
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 public class PickerModel {
 
@@ -23,6 +22,15 @@ public class PickerModel {
     }
     else {
       radiant.addPick(heroEnum, place);
+    }
+  }
+
+  public void addBan(HeroEnum heroEnum, TeamEnum team, int place) {
+    if (team.equals(TeamEnum.DIRE)){
+      dire.addBan(heroEnum, place);
+    }
+    else {
+      radiant.addBan(heroEnum, place);
     }
   }
 
@@ -56,14 +64,17 @@ public class PickerModel {
       for (Couplet c : radiantAggregatedMatchups) {
         double win = c.getWinrate() * -1;
         String matchupString;
-        if (win > 0) {
-          matchupString = "<html><font color=\"green\">+ " + win + "%,</font> " + String.valueOf(c.hero) + "</html>";
+        if (dire.bansContains(c.hero) || radiant.bansContains(c.hero)) {
+          matchupString = "<html><strike><font color=\"red\"> " + new DecimalFormat("#.##").format(win) + "%, " + String.valueOf(c.hero) + "</font></strike></html>";
+        }
+        else if (win > 0) {
+          matchupString = "<html><font color=\"green\">+" + new DecimalFormat("#.##").format(win) + "%,</font> " + String.valueOf(c.hero) + "</html>";
         }
         else if (win < 0) {
-          matchupString = "<html><font color=\"red\">" + win + "%,</font> " + String.valueOf(c.hero) + "</html>";
+          matchupString = "<html><font color=\"red\">" + new DecimalFormat("#.##").format(win) + "%,</font> " + String.valueOf(c.hero) + "</html>";
         }
         else {
-          matchupString = "<html><font color=\"black\">" + win + "%,</font> " + String.valueOf(c.hero) + "</html>";
+          matchupString = "<html><font color=\"black\"> " + new DecimalFormat("#.##").format(win) + "%,</font> " + String.valueOf(c.hero) + "</html>";
         }
         suggestions.add(matchupString);
       }
@@ -78,14 +89,17 @@ public class PickerModel {
       for (Couplet c : direAggregatedMatchups) {
         double win = c.getWinrate() * -1;
         String matchupString;
-        if (win > 0) {
-          matchupString = "<html><font color=\"green\">+ " + win + "%,</font> " + String.valueOf(c.hero) + "</html>";
+        if (dire.bansContains(c.hero) || radiant.bansContains(c.hero)) {
+          matchupString = "<html><strike><font color=\"red\"> " + new DecimalFormat("#.##").format(win) + "%, " + String.valueOf(c.hero) + "</font></strike></html>";
+        }
+        else if (win > 0) {
+          matchupString = "<html><font color=\"green\">+" + new DecimalFormat("#.##").format(win) + "%,</font> " + String.valueOf(c.hero) + "</html>";
         }
         else if (win < 0) {
-          matchupString = "<html><font color=\"red\">" + win + "%,</font> " + String.valueOf(c.hero) + "</html>";
+          matchupString = "<html><font color=\"red\">" + new DecimalFormat("#.##").format(win) + "%,</font> " + String.valueOf(c.hero) + "</html>";
         }
         else {
-          matchupString = "<html><font color=\"black\">" + win + "%,</font> " + String.valueOf(c.hero) + "</html>";
+          matchupString = "<html><font color=\"black\"> " + new DecimalFormat("#.##").format(win) + "%,</font> " + String.valueOf(c.hero) + "</html>";
         }
         suggestions.add(matchupString);
       }
