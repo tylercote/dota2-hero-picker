@@ -302,7 +302,7 @@ public class PickerView {
     public void actionPerformed(ActionEvent e) {
       JComboBox comboBox = (JComboBox) e.getSource();
       HeroEnum hero = (HeroEnum) comboBox.getSelectedItem();
-      String heroIconFilepath = "/pics/" + String.valueOf(hero).toLowerCase().replaceAll("_","-") + ".jpg";
+      String heroIconFilepath = "pics\\" + String.valueOf(hero).toLowerCase().replaceAll("_","-") + ".jpg";
       int index;
       TeamEnum team;
       boolean isPick = false;
