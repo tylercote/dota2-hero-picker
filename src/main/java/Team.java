@@ -84,7 +84,9 @@ class Team {
   }
 
   ArrayList<Couplet> getAggregatedMatchups() {
+
     ArrayList<Couplet> aggregatedMatchups = new ArrayList<>();
+
     // Initializes couplets to 0, in alphabetical order
     for (int i = 0; i < HeroEnum.values().length; i++) {
       aggregatedMatchups.add(new Couplet(HeroEnum.values()[i], 0.0));
@@ -93,6 +95,7 @@ class Team {
       if (picks[i] != null) {
         Hero hero = new Hero(picks[i]);
         ArrayList<Couplet> matchups = hero.matchups;
+
         //Sorts matchups alphabetically
         Collections.sort(matchups, new Comparator<Couplet>() {
           @Override
@@ -104,7 +107,7 @@ class Team {
         for (Couplet c : matchups) {
           for (Couplet ca : aggregatedMatchups) {
             if (c.hero == ca.hero) {
-              ca.setWinrate(ca.getWinrate() + c.getWinrate());
+              ca.setDisadvantage(ca.getDisadvantage() - c.getDisadvantage());
               break;
             }
           }

@@ -8,7 +8,7 @@ public class PickerTest {
     PickerView view = new PickerView(model);
     PickerController control = new PickerController(model);
 
-    JFrame frame = new JFrame("Dota 2 Picker");
+    JFrame frame = new JFrame("Dota 2 Counter Picker");
     frame.getContentPane().add(view.getMainPanel()); // add view
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.pack();

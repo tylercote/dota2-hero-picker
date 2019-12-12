@@ -58,11 +58,11 @@ public class PickerModel {
         radiantAggregatedMatchups.sort(new Comparator<Couplet>() {
         @Override
         public int compare(Couplet o1, Couplet o2) {
-          return o1.getWinrate().compareTo(o2.getWinrate());
+          return o1.getDisadvantage().compareTo(o2.getDisadvantage());
         }
       });
       for (Couplet c : radiantAggregatedMatchups) {
-        double win = c.getWinrate() * -1;
+        double win = c.getDisadvantage() * -1;
         String matchupString;
         if (dire.bansContains(c.hero) || radiant.bansContains(c.hero)) {
           matchupString = "<html><strike><font color=\"red\"> " + new DecimalFormat("#.##").format(win) + "%, " + String.valueOf(c.hero) + "</font></strike></html>";
@@ -83,11 +83,11 @@ public class PickerModel {
       direAggregatedMatchups.sort(new Comparator<Couplet>() {
         @Override
         public int compare(Couplet o1, Couplet o2) {
-          return o1.getWinrate().compareTo(o2.getWinrate());
+          return o1.getDisadvantage().compareTo(o2.getDisadvantage());
         }
       });
       for (Couplet c : direAggregatedMatchups) {
-        double win = c.getWinrate() * -1;
+        double win = c.getDisadvantage() * -1;
         String matchupString;
         if (dire.bansContains(c.hero) || radiant.bansContains(c.hero)) {
           matchupString = "<html><strike><font color=\"red\"> " + new DecimalFormat("#.##").format(win) + "%, " + String.valueOf(c.hero) + "</font></strike></html>";

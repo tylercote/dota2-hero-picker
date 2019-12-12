@@ -28,7 +28,7 @@ public class Hero {
   private static final String getUrl(HeroEnum heroEnum) {
     String name = heroEnum.name().toLowerCase();
     name = name.replaceAll("_", "-");
-    return "https://www.dotabuff.com/heroes/" + name + "/matchups";
+    return "https://www.dotabuff.com/heroes/" + name + "/counters";
   }
 
   public ArrayList<Couplet> getMatchups() {
@@ -47,13 +47,13 @@ public class Hero {
     }
 
     Elements tables = dbpage.getElementsByTag("tbody");
-    Element winrateTable = tables.get(1);
+    Element winrateTable = tables.get(3);
     Elements matchupRows = winrateTable.select("tr");
 
     for (Element row : matchupRows) {
       HeroEnum hero = HeroEnum.valueOf(row.select("td").first().attr("data-value").toUpperCase().replaceAll(" ", "_").replaceAll("\'", "").replaceAll("-", ""));
-      Double winrate = Double.valueOf(row.select("td").get(2).attr("data-value"));
-      matchups.add(new Couplet(hero, winrate));
+      Double disadvantage = Double.valueOf(row.select("td").get(2).attr("data-value"));
+      matchups.add(new Couplet(hero, disadvantage));
     }
 
     return matchups;

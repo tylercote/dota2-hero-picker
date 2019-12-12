@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class PickerView {
 
@@ -74,8 +75,13 @@ public class PickerView {
   private JLabel direBan4Pic;
   private JLabel direBan5Pic;
 
+  private GridLayout pbGrid;
+
   public PickerView(PickerModel model) {
     this.model = model;
+
+    pbGrid = new GridLayout(6, 4);
+    pbGrid.setHgap(0);
 
     radiantPick1Pic = new JLabel();
     radiantPick2Pic = new JLabel();
@@ -138,18 +144,20 @@ public class PickerView {
     radiantSuggestionTitle = new JLabel("Suggested picks:");
     radiantSuggestions = new JList(model.getSuggestions(TeamEnum.RADIANT).toArray());
     radiantSuggestScroll = new JScrollPane(radiantSuggestions);
-    radiantSuggestScroll.setPreferredSize(new Dimension(200, 400));
+    radiantSuggestScroll.setPreferredSize(new Dimension(140, 400));
     radiantSuggestionPanel.add(radiantSuggestionTitle);
     radiantSuggestionPanel.add(radiantSuggestScroll);
 
     radiantTitle = new JLabel("RADIANT");
+    radiantTitle.setBorder(new EmptyBorder(10,0,10,0));
 
     radiantPBPanel = new JPanel();
-    radiantPBPanel.setLayout(new GridLayout(6, 4));
+    radiantPBPanel.setLayout(pbGrid);
+    radiantPBPanel.setPreferredSize(new Dimension(515, 700));
 
-    radiantPBPanel.add(Box.createRigidArea(new Dimension(100, 50)));
+    radiantPBPanel.add(Box.createRigidArea(new Dimension(50, 50)));
     radiantPBPanel.add(radiantPickTitle);
-    radiantPBPanel.add(Box.createRigidArea(new Dimension(100, 50)));
+    radiantPBPanel.add(Box.createRigidArea(new Dimension(50, 50)));
     radiantPBPanel.add(radiantBanTitle);
 
     radiantPBPanel.add(radiantPick1Pic);
@@ -228,19 +236,21 @@ public class PickerView {
 
     direSuggestions = new JList(model.getSuggestions(TeamEnum.DIRE).toArray());
     direSuggestScroll = new JScrollPane(direSuggestions);
-    direSuggestScroll.setPreferredSize(new Dimension(200, 400));
+    direSuggestScroll.setPreferredSize(new Dimension(140, 400));
     direSuggestionPanel.add(direSuggestionTitle);
     direSuggestionPanel.add(direSuggestScroll);
 
     direTitle = new JLabel("DIRE");
+    direTitle.setBorder(new EmptyBorder(10,0,10,0));
 
     direPBPanel = new JPanel();
-    direPBPanel.setLayout(new GridLayout(6, 4));
+    direPBPanel.setLayout(pbGrid);
+    direPBPanel.setPreferredSize(new Dimension(515, 700));
 
     direPBPanel.add(direBanTitle);
-    direPBPanel.add(Box.createRigidArea(new Dimension(100, 50)));
+    direPBPanel.add(Box.createRigidArea(new Dimension(50, 50)));
     direPBPanel.add(direPickTitle);
-    direPBPanel.add(Box.createRigidArea(new Dimension(100, 50)));
+    direPBPanel.add(Box.createRigidArea(new Dimension(50, 50)));
 
     direPBPanel.add(direBan1);
     direPBPanel.add(direBan1Pic);
@@ -277,15 +287,16 @@ public class PickerView {
     direPanel.add(direTitle);
     direPanel.add(direPBSPanel);
 
+    radiantPanel.setBackground(Color.CYAN);
+    direPanel.setBackground(Color.RED);
+
     teamsPanel = new JPanel();
     teamsPanel.setLayout(new FlowLayout());
     teamsPanel.add(radiantPanel);
     teamsPanel.add(direPanel);
 
-    JLabel titleLabel = new JLabel("Dota 2 Picker");
     mainPanel = new JPanel();
     mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.PAGE_AXIS));
-    mainPanel.add(titleLabel);
     mainPanel.add(teamsPanel);
 
 
@@ -302,7 +313,7 @@ public class PickerView {
     public void actionPerformed(ActionEvent e) {
       JComboBox comboBox = (JComboBox) e.getSource();
       HeroEnum hero = (HeroEnum) comboBox.getSelectedItem();
-      String heroIconFilepath = "pics\\" + String.valueOf(hero).toLowerCase().replaceAll("_","-") + ".jpg";
+      String heroIconFilepath = "/resources/" + String.valueOf(hero).toLowerCase().replaceAll("_","-") + ".jpg";
       int index;
       TeamEnum team;
       boolean isPick = false;
@@ -403,7 +414,9 @@ public class PickerView {
       if (isPick) {
 
         if (model.dire.picksContains(hero)
-                || model.radiant.picksContains(hero)) {
+                || model.radiant.picksContains(hero)
+                || model.dire.bansContains(hero)
+                || model.radiant.bansContains(hero)) {
           comboBox.setSelectedIndex(-1);
         } else {
           model.addPick(hero, team, index);
@@ -413,7 +426,9 @@ public class PickerView {
 
       } else {
         if (model.dire.picksContains(hero)
-                || model.radiant.picksContains(hero)) {
+                || model.radiant.picksContains(hero)
+                || model.dire.bansContains(hero)
+                || model.radiant.bansContains(hero)) {
           comboBox.setSelectedIndex(-1);
         } else {
           model.addBan(hero, team, index);
